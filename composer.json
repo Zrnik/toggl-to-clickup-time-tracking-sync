@@ -1,0 +1,29 @@
+{
+    "name": "zrnik/toggl-to-clickup-time-tracking-sync",
+    "description": "utility to upload toggl time tracking to clickup",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Štěpán Zrník",
+            "email": "stepan.zrnik@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "UploadTool\\": "app"
+        }
+    },
+    "require": {
+      "php": "^8.3",
+        "symfony/console": "^7",
+        "nette/neon": "^3",
+        "tracy/tracy": "^2",
+        "guzzlehttp/guzzle": "^7",
+        "nette/utils": "^4"
+    }
+    ,
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    }
+}
