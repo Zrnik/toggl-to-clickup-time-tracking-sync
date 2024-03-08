@@ -6,6 +6,9 @@ use RuntimeException;
 
 class ClickUpIdDetector
 {
+    /**
+     * @param string[] $existingId
+     */
     public function __construct(private readonly array $existingId)
     {
     }

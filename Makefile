@@ -10,7 +10,7 @@ composer-install: build
 	sudo chmod 777 -R vendor
 
 phpstan:
-	docker run -w /app -v $(shell pwd):/app toggl_to_clickup_image php vendor/bin/phpstan analyse src -l max
+	docker run -w /app -v $(shell pwd):/app toggl_to_clickup_image php vendor/bin/phpstan analyse app -l 8
 
 upload:
 	docker run -w /app -v $(shell pwd):/app toggl_to_clickup_image php bin/console tool:upload

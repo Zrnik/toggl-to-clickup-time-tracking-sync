@@ -9,6 +9,11 @@ use Nette\Utils\JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use RuntimeException;
 
+/**
+ * @phpstan-import-type TogglCustomEntryFormatArrayType from TogglApi
+ * @phpstan-import-type TogglCustomEntryFormatEnhancedWithClickUpIdArrayType from UploadCommand
+ * @phpstan-type ClickUpEntryArrayType array{start: int, duration: int}
+ */
 class ClickUpApi
 {
     private Client $client;
@@ -144,6 +149,7 @@ class ClickUpApi
     /**
      * @param array<int, string[]> $clickUpTaskIdsByTeamIds
      * @param array $togglTimeEntries
+     * @phpstan-param TogglCustomEntryFormatEnhancedWithClickUpIdArrayType[] $togglTimeEntries
      * @return void
      * @throws ClientExceptionInterface
      * @throws JsonException
@@ -230,6 +236,11 @@ class ClickUpApi
         }
     }
 
+    /**
+     * @param TogglCustomEntryFormatEnhancedWithClickUpIdArrayType[] $togglTimeEntries
+     * @param string $taskId
+     * @return TogglCustomEntryFormatEnhancedWithClickUpIdArrayType[]
+     */
     private function filterTogglEntriesByTaskId(array $togglTimeEntries, string $taskId): array
     {
         $filteredEntries = [];
@@ -246,6 +257,8 @@ class ClickUpApi
     /**
      * @throws JsonException
      * @throws ClientExceptionInterface
+     * @noinspection PhpReturnValueOfMethodIsNeverUsedInspection
+     * @phpstan-param TogglCustomEntryFormatArrayType $togglEntryForThisTask
      */
     private function createClickUpTimeEntry(
         int    $teamId,
@@ -268,13 +281,17 @@ class ClickUpApi
         $response = $this->client->sendRequest($request);
 
         if ($response->getStatusCode() !== 200) {
-            dump((string)$response->getBody());
+            throw new RuntimeException((string)$response->getBody());
         }
 
         return $response->getStatusCode() === 200;
     }
 
-    private function deleteClickUpTimeEntry(int $teamId, string $timerId)
+    /**
+     * @throws ClientExceptionInterface
+     * @noinspection PhpReturnValueOfMethodIsNeverUsedInspection
+     */
+    private function deleteClickUpTimeEntry(int $teamId, string $timerId): bool
     {
         $request = $this->authorizedRequest(
             'DELETE',
@@ -282,17 +299,5 @@ class ClickUpApi
         );
 
         return $this->client->sendRequest($request)->getStatusCode() === 200;
-
-        /* const resp = await fetch(
-         ``,
-   {
-     method: 'DELETE',
-     headers: {
-         'Content-Type': 'application/json',
-       Authorization: 'YOUR_API_KEY_HERE'
-     }
-   }
- );*/
-
     }
 }

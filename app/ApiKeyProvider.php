@@ -14,14 +14,22 @@ class ApiKeyProvider
     public function __construct(string $configPath)
     {
         try {
+            /** @var array<string, scalar> $config */
             $config = Neon::decodeFile($configPath);
+
             $this->togglApiKey = $this->parseArgument($config, 'togglApiKey');
             $this->clickUpApiKey = $this->parseArgument($config, 'clickUpApiKey');
+
         } catch (Exception $e) {
             throw new RuntimeException(sprintf('Error parsing config file "%s"!', $configPath), 0, $e);
         }
     }
 
+    /**
+     * @param array<string, scalar> $config
+     * @param string $argumentKey
+     * @return string
+     */
     private function parseArgument(array $config, string $argumentKey): string
     {
         $apiKey = $config[$argumentKey] ?? throw new RuntimeException(

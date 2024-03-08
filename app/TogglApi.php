@@ -10,6 +10,9 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 
+/**
+ * @phpstan-type TogglCustomEntryFormatArrayType array{id: int, name: string, start: int, end: int, duration: int}
+ */
 class TogglApi
 {
     private Client $client;
@@ -42,6 +45,7 @@ class TogglApi
     /**
      * @throws ClientExceptionInterface
      * @throws JsonException
+     * @phpstan-return TogglCustomEntryFormatArrayType[]
      */
     public function getAllTimeEntriesForLast40Days(): array
     {
@@ -94,8 +98,8 @@ class TogglApi
                         // Bruh, im usually never-nester XD
                         // But this is a quick dirty tool, please don't judge me :D
                         $timeEntryList[] = [
-                            'id' => $timeEntry['id'],
-                            'name' => $timeEntryContainer['description'],
+                            'id' => (int)$timeEntry['id'],
+                            'name' => (string)$timeEntryContainer['description'],
                             'start' => strtotime($timeEntry['start']) * 1000,
                             'end' => strtotime($timeEntry['stop']) * 1000,
                             'duration' => ((int)$timeEntry['seconds']) * 1000,

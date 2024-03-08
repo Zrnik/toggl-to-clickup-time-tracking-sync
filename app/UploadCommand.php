@@ -2,7 +2,6 @@
 
 namespace UploadTool;
 
-use AJT\Toggl\TogglClient;
 use Exception;
 use Nette\Utils\JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -10,6 +9,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @phpstan-import-type TogglCustomEntryFormatArrayType from TogglApi
+ * @phpstan-type TogglCustomEntryFormatEnhancedWithClickUpIdArrayType array{
+ *     id: int, name: string, start: int, end: int, duration: int, click_up_id: string,
+ * }
+ */
 class UploadCommand extends Command
 {
     private ClickUpApi $clickUpApi;
@@ -58,6 +63,12 @@ class UploadCommand extends Command
         return 0;
     }
 
+    /**
+     * @param ClickUpIdDetector $clickUpIdDetector
+     * @param array $togglTimeEntries
+     * @phpstan-param TogglCustomEntryFormatArrayType[] $togglTimeEntries
+     * @return TogglCustomEntryFormatEnhancedWithClickUpIdArrayType[]
+     */
     private function filterTimeEntriesWithoutClickUpId(
         ClickUpIdDetector $clickUpIdDetector,
         array             $togglTimeEntries
