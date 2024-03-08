@@ -20,6 +20,8 @@ class UploadCommand extends Command
     private ClickUpApi $clickUpApi;
     private TogglApi $togglApi;
 
+    public static ?OutputInterface $output = null;
+
     /**
      * @throws Exception
      */
@@ -37,6 +39,8 @@ class UploadCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        self::$output = $output;
+
         ClickUpIdDetector::test();
 
         $clickUpTaskIdsByTeamIds = $this->clickUpApi->getAllClickUpTaskIds();

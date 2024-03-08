@@ -46,7 +46,7 @@ class ClickUpApi
         $request = $this->authorizedRequest('GET', 'https://api.clickup.com/api/v2/user');
         $response = $this->client->sendRequest($request);
         $result = Json::decode($response->getBody()->getContents(), forceArrays: true);
-        return $result['user']['id'] ?? throw new RuntimeException('no user id found in clickup!');
+        return $result['user']['id'] ?? throw new RuntimeException('no user id found in ClickUp!');
     }
 
     /**
@@ -147,6 +147,7 @@ class ClickUpApi
     }
 
     /**
+     * @param int $currentClickUpUserId
      * @param array<int, string[]> $clickUpTaskIdsByTeamIds
      * @param array $togglTimeEntries
      * @phpstan-param TogglCustomEntryFormatEnhancedWithClickUpIdArrayType[] $togglTimeEntries
@@ -192,14 +193,25 @@ class ClickUpApi
                             if ($foundEntryOnClickUp === null) {
                                 $foundEntryOnClickUp = $clickUpEntry;
                             } else {
-                                dump('[' . $taskId . '] Deleting Entry');
-                                $this->deleteClickUpTimeEntry($teamId, $clickUpEntry['id']);
+                                UploadCommand::$output?->writeln(
+                                    sprintf(
+                                        '[%s] Deleting duplicate entry "%s"',
+                                        $taskId,
+                                        $togglEntryForThisTask['name']
+                                    )
+                                );
                             }
                         }
                     }
 
                     if ($foundEntryOnClickUp === null) {
-                        dump('[' . $taskId . '] Creating Entry');
+                        UploadCommand::$output?->writeln(
+                            sprintf(
+                                '[%s] Creating entry "%s"',
+                                $taskId,
+                                $togglEntryForThisTask['name']
+                            )
+                        );
                         $this->createClickUpTimeEntry($teamId, $taskId, $currentClickUpUserId, $togglEntryForThisTask);
                     }
                 }
@@ -218,8 +230,8 @@ class ClickUpApi
 
                     foreach ($togglEntriesForThisTask as $togglEntryForThisTask) {
                         if (
-                            Utils::clickUpEntryEqualsTogglEntry($clickUpEntry, $togglEntryForThisTask)
-                            && $foundEntryOnToggl === null
+                            $foundEntryOnToggl === null
+                            && Utils::clickUpEntryEqualsTogglEntry($clickUpEntry, $togglEntryForThisTask)
                         ) {
                             $foundEntryOnToggl = $clickUpEntry;
                             break;
@@ -228,7 +240,9 @@ class ClickUpApi
 
                     if ($foundEntryOnToggl === null) {
                         // ClickUp Entry that is not on toggl!? Delete!
-                        dump('[' . $taskId . '] Deleting Unknown Entry');
+                        UploadCommand::$output?->writeln(
+                            sprintf('[%s] Deleting unknown entry', $taskId)
+                        );
                         $this->deleteClickUpTimeEntry($teamId, $clickUpEntry['id']);
                     }
                 }
