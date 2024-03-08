@@ -1,26 +1,19 @@
-# Toggl To ClickUp Time Tracking Sync
+# Synchronize Toggl and ClickUp Time Tracking with Docker
 
-### How to use: (Docker Required)
+## Usage Instructions: (Docker Required)
 
-Clone this repository, copy `config.neon.dist` to `config.neon` 
-and fill it with your API keys from ClickUp and Toggl.
+1. Clone this repository and duplicate `config.neon.dist` as `config.neon`.
+2. Populate `config.neon` with your ClickUp and Toggl API keys.
 
-First run `make build` which will build the PHP image locally with docker.
+Execute the following commands:
 
-Then run `make upload` which will synchronize your time entries from 
-toggl and uploads them to ClickUp. The synchronization is only updated
-for toggl entries **40 days old or newer**!
+- Run `make build` to locally build the PHP image using Docker.
+- Run `make upload` to sync your time entries from Toggl and upload them to ClickUp. The synchronization only affects Toggl entries **40 days old or newer**.
 
-> If you create, modify or delete time entry in Toggl,
-> it will be created, modified or deleted it in ClickUp too.
+> Any creation, modification, or deletion of time entries in Toggl will be mirrored in ClickUp.
 
-### Detecting IDs
+## ID Detection
 
-You must include task id in format `#xyzabc0123` anywhere in the
-time entry description, and it will automatically pick up.
+Include the task ID in the format `#xyzabc0123` within the time entry description, and it will be automatically recognized.
 
-If you provide multiple task ids, only the first one will have the 
-time entry uploaded.
-
-If you use custom task IDs, you still have to put `#` in front
-of their name in toggl.
+>If multiple task IDs are provided, only the first one will be uploaded with the time entry.
