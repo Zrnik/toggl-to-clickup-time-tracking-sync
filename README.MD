@@ -17,3 +17,15 @@ Execute the following commands:
 Include the task ID in the format `#xyzabc0123` within the time entry description, and it will be automatically recognized.
 
 >If multiple task IDs are provided, only the first one will be uploaded with the time entry.
+
+## System Wide Command
+
+I am using this alias to call `clickup` command anywhere in my WSL to upload the 
+toggl times. You can do the same by putting it into your `~/.bashrc` file.
+
+```
+alias clickup="make -C ~/projects/toggl-to-clickup-time-tracking-sync upload"
+```
+
+I have cloned this project to `~/projects/toggl-to-clickup-time-tracking-sync` directory,
+do not forget to change it to your clone path!
