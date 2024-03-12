@@ -12,7 +12,7 @@ use RuntimeException;
 /**
  * @phpstan-import-type TogglCustomEntryFormatArrayType from TogglApi
  * @phpstan-import-type TogglCustomEntryFormatEnhancedWithClickUpIdArrayType from UploadCommand
- * @phpstan-type ClickUpEntryArrayType array{start: int, duration: int}
+ * @phpstan-type ClickUpEntryArrayType array{start: int, duration: int, description: string}
  */
 class ClickUpApi
 {
@@ -272,7 +272,7 @@ class ClickUpApi
      * @throws JsonException
      * @throws ClientExceptionInterface
      * @noinspection PhpReturnValueOfMethodIsNeverUsedInspection
-     * @phpstan-param TogglCustomEntryFormatArrayType $togglEntryForThisTask
+     * @phpstan-param TogglCustomEntryFormatEnhancedWithClickUpIdArrayType $togglEntryForThisTask
      */
     private function createClickUpTimeEntry(
         int    $teamId,
@@ -288,6 +288,7 @@ class ClickUpApi
                 'tid' => $taskId,
                 'start' => $togglEntryForThisTask['start'],
                 'duration' => $togglEntryForThisTask['duration'],
+                'description' => $togglEntryForThisTask['click_up_description'],
                 'assignee' => $currentClickUpUserId,
             ])
         );

@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @phpstan-import-type TogglCustomEntryFormatArrayType from TogglApi
  * @phpstan-type TogglCustomEntryFormatEnhancedWithClickUpIdArrayType array{
- *     id: int, name: string, start: int, end: int, duration: int, click_up_id: string,
+ *     id: int, name: string, start: int, end: int, duration: int, click_up_id: string, click_up_description: string,
  * }
  */
 class UploadCommand extends Command
@@ -85,6 +85,11 @@ class UploadCommand extends Command
 
             if ($detectedId !== null) {
                 $togglTimeEntry['click_up_id'] = $detectedId;
+
+                $togglTimeEntry['click_up_description'] = trim(
+                    str_replace('#' . $togglTimeEntry['click_up_id'], '', $togglTimeEntry['name'])
+                );
+
                 $filteredEntries[] = $togglTimeEntry;
             }
         }
