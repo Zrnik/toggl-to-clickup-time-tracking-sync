@@ -4,11 +4,11 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use UploadTool\UploadCommand;
+use UploadTool\Command\SyncCommand;
 
 $application = new Application();
 
-$application->add(new UploadCommand());
+$application->add(new SyncCommand());
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $application->run();

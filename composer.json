@@ -1,6 +1,6 @@
 {
     "name": "zrnik/toggl-to-clickup-time-tracking-sync",
-    "description": "utility to upload toggl time tracking to clickup",
+    "description": "Utility to sync time tracking from Toggl to ClickUp.",
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
@@ -15,16 +15,18 @@
         }
     },
     "require": {
-      "php": "^8.3",
+        "php": "^8.3",
         "symfony/console": "^7",
         "nette/neon": "^3",
         "tracy/tracy": "^2",
         "guzzlehttp/guzzle": "^7",
-        "nette/utils": "^4"
-    }
-    ,
+        "nette/utils": "^4",
+        "zrnik/php-attribute-reflection": "^0",
+        "brick/date-time": "^0.6"
+    },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "phpstan/phpstan": "^1"
+        "phpstan/phpstan": "^1",
+        "symplify/easy-coding-standard": "^12"
     }
 }

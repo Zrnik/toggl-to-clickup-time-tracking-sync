@@ -1,6 +1,8 @@
 <?php
 
-namespace UploadTool;
+declare(strict_types=1);
+
+namespace UploadTool\Misc;
 
 use Nette\Neon\Exception;
 use Nette\Neon\Neon;
@@ -8,20 +10,22 @@ use RuntimeException;
 
 class ApiKeyProvider
 {
+    private const string CONFIG_NEON = __DIR__ . '/../../config.neon';
+
     private string $togglApiKey;
+
     private string $clickUpApiKey;
 
-    public function __construct(string $configPath)
+    public function __construct()
     {
         try {
             /** @var array<string, scalar> $config */
-            $config = Neon::decodeFile($configPath);
+            $config = Neon::decodeFile(self::CONFIG_NEON);
 
             $this->togglApiKey = $this->parseArgument($config, 'togglApiKey');
             $this->clickUpApiKey = $this->parseArgument($config, 'clickUpApiKey');
-
         } catch (Exception $e) {
-            throw new RuntimeException(sprintf('Error parsing config file "%s"!', $configPath), 0, $e);
+            throw new RuntimeException(sprintf('Error parsing config file "%s"!', self::CONFIG_NEON), 0, $e);
         }
     }
 
@@ -36,7 +40,7 @@ class ApiKeyProvider
             sprintf('%s is missing in config file!', $argumentKey)
         );
 
-        if (!is_string($apiKey)) {
+        if (! is_string($apiKey)) {
             throw new RuntimeException(
                 sprintf('%s must be a string!', $argumentKey)
             );

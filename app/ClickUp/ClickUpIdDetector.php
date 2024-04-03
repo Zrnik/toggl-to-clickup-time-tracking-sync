@@ -1,27 +1,38 @@
 <?php
 
-namespace UploadTool;
+declare(strict_types=1);
+
+namespace UploadTool\ClickUp;
 
 use RuntimeException;
 
-class ClickUpIdDetector
+readonly class ClickUpIdDetector
 {
     /**
-     * @param string[] $existingId
+     * @param string[] $taskIds
      */
-    public function __construct(private readonly array $existingId)
-    {
+    final private function __construct(
+        private array $taskIds,
+        bool $skipTests = false,
+    ) {
+        if (! $skipTests) {
+            self::test();
+        }
     }
 
+    /**
+     * @param string $code Any string
+     * @return string|null Pure valid code or null
+     */
     public function find(string $code): ?string
     {
         $pieces = explode('#', $code);
         unset($pieces[0]);
 
         foreach ($pieces as $piece) {
-            foreach ($this->existingId as $existingId) {
-                if (str_starts_with($piece, $existingId)) {
-                    return $existingId;
+            foreach ($this->taskIds as $taskId) {
+                if (str_starts_with($piece, $taskId)) {
+                    return $taskId;
                 }
             }
         }
@@ -30,9 +41,9 @@ class ClickUpIdDetector
     }
 
     // This is a quick test it works properly...
-    public static function test(): void
+    private static function test(): void
     {
-        $clickUpIdDetector = new ClickUpIdDetector(['qwe', 'asd', 'yxc']);
+        $clickUpIdDetector = new ClickUpIdDetector(['qwe', 'asd', 'yxc'], true);
 
         $detectableValue = [
             'hello world #qwe' => 'qwe',
@@ -44,6 +55,8 @@ class ClickUpIdDetector
             'qwe' => null,
             'asd' => null,
             'yxc' => null,
+            '#qwe #asd' => 'qwe',
+            '#asd #qwe' => 'asd',
         ];
 
         foreach ($detectableValue as $code => $expectedResult) {
@@ -57,5 +70,14 @@ class ClickUpIdDetector
                 );
             }
         }
+    }
+
+    /**
+     * @param string[] $taskIds
+     * @return self
+     */
+    public static function fromIds(array $taskIds): self
+    {
+        return new self($taskIds);
     }
 }
