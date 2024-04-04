@@ -8,7 +8,7 @@
 Execute the following commands:
 
 - Run `make build` to locally build the PHP image using Docker.
-- Run `make upload` to sync your time entries from Toggl and upload them to ClickUp. The synchronization only affects Toggl entries **40 days old or newer**.
+- Run `make upload` to sync your time entries from Toggl and upload them to ClickUp.
 
 > Any creation, modification, or deletion of time entries in Toggl will be mirrored in ClickUp.
 
